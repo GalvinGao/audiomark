@@ -1,0 +1,6 @@
+# pnpm 11+ reads every non-auth setting from this file.
+# .npmrc now holds registry and authentication settings only.
+virtualStoreType: global
+
+packages:
+  - "web"

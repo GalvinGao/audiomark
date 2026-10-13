@@ -1,0 +1,27 @@
+{
+  "name": "audiomark",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm run \"/^dev:/\"",
+    "dev:web": "pnpm --filter web dev",
+    "dev:server": "cd server && uv run uvicorn audiomark_server.app:app --port 8787 --reload",
+    "build": "pnpm --filter web build",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^26.11.1",
+      "onFail": "download"
+    },
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^12.11.2",
+      "onFail": "download"
+    }
+  }
+}

@@ -1,0 +1,629 @@
+:root {
+  color-scheme: dark;
+  --bg: #0e0f12;
+  --surface: #16181d;
+  --surface-2: #1d2027;
+  --border: #2a2e37;
+  --text: #e8eaef;
+  --text-muted: #8a8f9c;
+  --accent: #7c9cff;
+  --accent-strong: #a3b8ff;
+  --selected: #ffd166;
+  --record: #ff5d5d;
+  --ok: #4ade80;
+  --warn: #fbbf24;
+  --radius: 10px;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  font-family:
+    Inter, -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans", "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+kbd {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 1px 5px;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.error-text {
+  color: var(--record);
+}
+
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- top bar ------------------------------------------------------------- */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.brand-mark {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, var(--accent), var(--record));
+}
+
+.file-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+.topbar-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.status-ok .status-dot {
+  background: var(--ok);
+}
+
+.status-warn .status-dot {
+  background: var(--warn);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.status-error {
+  color: var(--record);
+}
+
+.status-error .status-dot {
+  background: var(--record);
+}
+
+.select select,
+.button {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  font: inherit;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.button:hover:not(:disabled),
+.select select:hover {
+  background: var(--surface-2);
+}
+
+.button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.button-primary {
+  border-color: transparent;
+  background: var(--accent);
+  color: #0b1020;
+  font-weight: 600;
+  min-width: 128px;
+  justify-content: center;
+}
+
+.button-primary:hover:not(:disabled) {
+  background: var(--accent-strong);
+}
+
+.button-primary[aria-busy="true"] {
+  opacity: 0.85;
+}
+
+/* --- drop zone ----------------------------------------------------------- */
+
+.dropzone {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+}
+
+.dropzone-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: min(560px, 100%);
+  padding: 56px 24px;
+  border: 1.5px dashed var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.dropzone-card:hover {
+  border-color: var(--accent);
+}
+
+.dropzone-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.dropzone-sub {
+  color: var(--text-muted);
+}
+
+.dropzone-keys {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.drag-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  background: rgba(14, 15, 18, 0.8);
+  pointer-events: none;
+}
+
+.drag-veil > div {
+  padding: 24px 40px;
+  border: 1.5px dashed var(--accent);
+  border-radius: 16px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* --- workspace ----------------------------------------------------------- */
+
+.workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.player {
+  position: relative;
+  min-height: 320px;
+  padding: 8px 0 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.player-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+}
+
+.player-overlay.error {
+  color: var(--record);
+}
+
+/* Region markers: numbered flags on the waveform (inside wavesurfer's shadow root). */
+.wave ::part(region) {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.wave ::part(marker) {
+  cursor: pointer;
+}
+
+.wave ::part(region-content) {
+  padding: 0;
+  width: max-content;
+}
+
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+
+.transport-recording {
+  border-color: color-mix(in srgb, var(--record) 60%, transparent);
+  background: color-mix(in srgb, var(--record) 8%, var(--surface));
+}
+
+.transport-button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--text);
+  color: var(--bg);
+  cursor: pointer;
+}
+
+.transport-playing .transport-button {
+  background: var(--record);
+  color: white;
+}
+
+.transport-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.transport-clock {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.transport-duration {
+  color: var(--text-muted);
+}
+
+.transport-state {
+  min-width: 0;
+  flex: 1;
+}
+
+.transport-hint {
+  color: var(--text-muted);
+}
+
+.recording {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.recording-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--record);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.recording-elapsed {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.meter {
+  --level: 0;
+  position: relative;
+  width: 72px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.meter::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--record);
+  transform-origin: left;
+  transform: scaleX(var(--level));
+  transition: transform 60ms linear;
+}
+
+.link-button {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* --- notes --------------------------------------------------------------- */
+
+.notes-empty {
+  margin: 8px 0;
+  color: var(--text-muted);
+}
+
+.note-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.note-selected {
+  border-color: color-mix(in srgb, var(--selected) 60%, transparent);
+}
+
+.note-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.note-index {
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  border-radius: 5px;
+  background: var(--accent);
+  color: #0b1020;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.note-selected .note-index {
+  background: var(--selected);
+}
+
+.time-chip {
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.time-chip:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.note-lang {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.note-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 2px;
+}
+
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.icon-button:hover:not(:disabled) {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.icon-button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.icon-button[aria-busy="true"] {
+  opacity: 1;
+}
+
+.note-text {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  font: inherit;
+  font-size: 15px;
+  color: var(--text);
+  resize: none;
+  field-sizing: content;
+}
+
+.note-text:hover {
+  border-color: var(--border);
+}
+
+.note-text:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--bg);
+}
+
+.note-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 10px 6px 4px;
+}
+
+.note-skeleton span {
+  height: 10px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--surface-2), var(--border), var(--surface-2));
+  background-size: 200% 100%;
+  animation: shimmer 1.2s linear infinite;
+}
+
+.note-skeleton span:last-child {
+  width: 60%;
+}
+
+.note-error {
+  display: flex;
+  gap: 10px;
+  margin: 6px 6px 0;
+  color: var(--record);
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .topbar {
+    flex-wrap: wrap;
+    padding: 10px 16px;
+  }
+  .topbar-actions {
+    flex-wrap: wrap;
+  }
+  .workspace {
+    padding: 16px;
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "jsPlugins": ["./tools/oxlint-plugin-local/index.ts"],
+  "rules": {
+    "eslint/no-unused-vars": "warn",
+    "eslint/no-nested-ternary": "error",
+    "typescript/consistent-type-assertions": ["error", { "assertionStyle": "never" }],
+    "local/max-switch-cases": ["error", { "max": 3 }]
+  }
+}

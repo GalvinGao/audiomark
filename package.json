@@ -12,15 +12,19 @@
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check"
   },
+  "devDependencies": {
+    "oxfmt": "^0.72.0",
+    "oxlint": "^1.87.0"
+  },
   "devEngines": {
-    "runtime": {
-      "name": "node",
-      "version": "^26.11.1",
-      "onFail": "download"
-    },
     "packageManager": {
       "name": "pnpm",
       "version": "^12.11.2",
+      "onFail": "download"
+    },
+    "runtime": {
+      "name": "node",
+      "version": "^26.11.1",
       "onFail": "download"
     }
   }
